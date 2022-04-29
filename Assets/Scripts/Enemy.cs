@@ -39,22 +39,26 @@ public class Enemy : MonoBehaviour
         {
             GetComponent<Transform>().position = new Vector3(currentCell.upNeighbor.x, currentCell.upNeighbor.y, 0);
             currentCell = currentCell.upNeighbor;
+            BoardManager.Instance.MoveEnemies();
 
         }
         else if (Input.GetKeyDown(downKey) && currentCell.downNeighbor.isWalkable)
         {
             GetComponent<Transform>().position = new Vector3(currentCell.downNeighbor.x, currentCell.downNeighbor.y, 0);
             currentCell = currentCell.downNeighbor;
+            BoardManager.Instance.MoveEnemies();
         }
         else if (Input.GetKeyDown(rightKey) && currentCell.rightNeighbor.isWalkable)
         {
             GetComponent<Transform>().position = new Vector3(currentCell.rightNeighbor.x, currentCell.rightNeighbor.y, 0);
             currentCell = currentCell.rightNeighbor;
+            BoardManager.Instance.MoveEnemies();
         }
         else if (Input.GetKeyDown(leftKey) && currentCell.leftNeighbor.isWalkable)
         {
             GetComponent<Transform>().position = new Vector3(currentCell.leftNeighbor.x, currentCell.leftNeighbor.y, 0);
             currentCell = currentCell.leftNeighbor;
+            BoardManager.Instance.MoveEnemies();
         }
     }
 

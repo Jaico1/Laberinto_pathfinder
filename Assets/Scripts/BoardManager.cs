@@ -11,6 +11,7 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private Enemy EnemyPrefab;
     public Grid grid;
     private Player player;
+    public List<Player> enemies;
     private Enemy enemy;
     [SerializeField]
     private float moveSpeed = 2f;
@@ -26,34 +27,36 @@ public class BoardManager : MonoBehaviour
 
     private void Start()
     {
-        grid = new Grid(10, 10,  CellPrefab);
+        grid = new Grid(10, 10, CellPrefab);
+
 
         enemy = Instantiate(EnemyPrefab, new Vector2(0, 0), Quaternion.identity);
-        player = Instantiate(PlayerPrefab, new Vector2(8, 8), Quaternion.identity);  
+        player = Instantiate(PlayerPrefab, new Vector2(8, 8), Quaternion.identity);
+        enemies.Add(player);
         
     }
     private void Update()
     {
-        if (Input.GetKeyDown(upKey)) 
-        {
-            List<Cell> path = PathManager.Instance.FindPath(grid, (int)player.GetPosition.x, (int)player.GetPosition.y, (int)enemy.GetPosition.x, (int)enemy.GetPosition.y+1);
-            player.SetPath(path);
-        }
-        if (Input.GetKeyDown(downKey))
-        {
-            List<Cell> path = PathManager.Instance.FindPath(grid, (int)player.GetPosition.x, (int)player.GetPosition.y, (int)enemy.GetPosition.x, (int)enemy.GetPosition.y-1);
-            player.SetPath(path);
-        }
-        if (Input.GetKeyDown(leftKey))
-        {
-            List<Cell> path = PathManager.Instance.FindPath(grid, (int)player.GetPosition.x, (int)player.GetPosition.y, (int)enemy.GetPosition.x-1, (int)enemy.GetPosition.y);
-            player.SetPath(path);
-        }
-        if (Input.GetKeyDown(rightKey))
-        {
-            List<Cell> path = PathManager.Instance.FindPath(grid, (int)player.GetPosition.x, (int)player.GetPosition.y, (int)enemy.GetPosition.x+1, (int)enemy.GetPosition.y);
-            player.SetPath(path);
-        }
+        //if (Input.GetKeyDown(upKey)) 
+        //{
+        //    List<Cell> path = PathManager.Instance.FindPath(grid, (int)player.GetPosition.x, (int)player.GetPosition.y, (int)enemy.GetPosition.x, (int)enemy.GetPosition.y+1);
+        //    player.SetPath(path);
+        //}
+        //if (Input.GetKeyDown(downKey))
+        //{
+        //    List<Cell> path = PathManager.Instance.FindPath(grid, (int)player.GetPosition.x, (int)player.GetPosition.y, (int)enemy.GetPosition.x, (int)enemy.GetPosition.y-1);
+        //    player.SetPath(path);
+        //}
+        //if (Input.GetKeyDown(leftKey))
+        //{
+        //    List<Cell> path = PathManager.Instance.FindPath(grid, (int)player.GetPosition.x, (int)player.GetPosition.y, (int)enemy.GetPosition.x-1, (int)enemy.GetPosition.y);
+        //    player.SetPath(path);
+        //}
+        //if (Input.GetKeyDown(rightKey))
+        //{
+        //    List<Cell> path = PathManager.Instance.FindPath(grid, (int)player.GetPosition.x, (int)player.GetPosition.y, (int)enemy.GetPosition.x+1, (int)enemy.GetPosition.y);
+        //    player.SetPath(path);
+        //}
     }
     public void CellMouseClick(int x, int y)
     {
@@ -62,5 +65,14 @@ public class BoardManager : MonoBehaviour
         player.SetPath(path);
         //enemy.SetPath(path);
     }
-
+    public void MoveEnemies()
+    {
+        foreach (Player e in enemies)
+        {
+            List<Cell> path = PathManager.Instance.FindPath(grid, (int)e.GetPosition.x, (int)e.GetPosition.y, (int)enemy.GetPosition.x, (int)enemy.GetPosition.y);
+            
+            path.Remove(path[0]);
+            e.SetPath(path); 
+        }
+    }
 }

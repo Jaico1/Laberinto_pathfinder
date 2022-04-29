@@ -282,7 +282,8 @@ MonoBehaviour:
   PlayerPrefab: {fileID: 6832307862930382490, guid: 661fd36d9db37614abad9eac47632838, type: 3}
   EnemyPrefab: {fileID: 1966935546372853223, guid: 6db975b32c091aa45acbdd6edc6d699d, type: 3}
   grid: {fileID: 0}
-  moveSpeed: 2
+  enemies: []
+  moveSpeed: 5
   upKey: 119
   downKey: 115
   rightKey: 100
