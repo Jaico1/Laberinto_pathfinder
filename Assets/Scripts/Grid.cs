@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using Random = UnityEngine.Random; 
 
 
 public class Grid : ScriptableObject
@@ -12,18 +12,24 @@ public class Grid : ScriptableObject
     public List<Cell> cells = new List<Cell>();
     private Cell cellPrefab;
     private Cell[,] gridArray;
+    private int goalx;
+    private int goaly;
 
 
-    public Grid(int width, int height,  Cell cellPrefab)
+    public Grid(int width, int height,int goalx, int goaly,  Cell cellPrefab)
     {
         
         this.width = width;
         this.height = height;
+        this.goalx = goalx;
+        this.goaly = goaly;
         
         this.cellPrefab = cellPrefab;
 
         generateBoard();
     }
+
+    
 
     private void generateBoard()
     {
@@ -34,24 +40,43 @@ public class Grid : ScriptableObject
         {
             for (int j = 0; j < height; j++)
             {
-                var p = new Vector2(i, j);
-                cell = Instantiate(cellPrefab, p, Quaternion.identity);
-                cell.Init(this, (int)p.x, (int)p.y, true);
-                cells.Add(cell);
+                if (i==goalx && j==goaly)
+                {
+                    var p = new Vector2(i, j);
+                    cell = Instantiate(cellPrefab, p, Quaternion.identity);
+                    cell.Init(this, (int)p.x, (int)p.y, true);
+                    cells.Add(cell);
 
-                if (Random.Range(0, 10) <= 2)
-                    cell.SetWalkable(false);
-                else
-                    cell.SetColor(Color.blue);
 
-                gridArray[i, j] = cell;
+                    cell.SetWalkable(true);
+
+                    cell.SetColor(Color.red);
+
+                    gridArray[i, j] = cell;
+
+                    
+                }else
+                {
+                    var p = new Vector2(i, j);
+                    cell = Instantiate(cellPrefab, p, Quaternion.identity);
+                    cell.Init(this, (int)p.x, (int)p.y, true);
+                    cells.Add(cell);
+
+                    
+                    
+                        cell.SetColor(Color.blue);
+
+                    gridArray[i, j] = cell;
+                }
+                
             }
         }
 
         var center = new Vector2((float)height / 2 - 0.5f, (float)width / 2 - 0.5f);
-
+        Camera.main.orthographicSize = 2 + (width - 3) / 2;
         Camera.main.transform.position = new Vector3(center.x, center.y, -5);
         assignNeighbors();
+        defNonWalkables();
     }
 
     internal int GetHeight()
@@ -112,6 +137,31 @@ public class Grid : ScriptableObject
                 }
             }
         }
+    }
+
+    public void defNonWalkables()
+    {
+        for (int i = PlayerPrefs.GetInt("M"); i > 0;)
+        {
+            int ranx = Random.Range(0, width-1);
+            int rany = Random.Range(0, height-1);
+            foreach (Cell c in cells)
+            {
+                if (c.isWalkable)
+                {
+                    if (c.x == ranx && c.y == rany)
+                    {
+                        c.isWalkable = false;
+                        c.SetColor(Color.black);
+                        i--;
+                    }
+                }  
+                
+            }
+        }
+
+
+
     }
 
     /*internal float GetCellSize()
